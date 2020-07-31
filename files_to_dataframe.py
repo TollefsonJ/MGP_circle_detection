@@ -21,7 +21,10 @@ df['file'] = pd.Series(imgnames).astype(str)
 # Set "circles" variable to 0
 df['circles'] = 0
 
+
+
 # Set number of circles according to output filename from detect_circles_LOC.py
+# If there isn't a number of circles, it doesn't update circle string
 
 df['circles']= df['file'].str.extract(r'((?<=_out)\w+(?=\.jpg))')
 
