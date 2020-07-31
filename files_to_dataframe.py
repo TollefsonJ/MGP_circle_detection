@@ -1,40 +1,41 @@
-# this script reads in a list of files from output folder and converts to a dataframe
-# uses filenames generated from circle detection script
+# This script reads in a list of LOC files from a folder and converts that list to a dataframe
+# It's designed to be run after detect_circles_LOC.py
+# It's structured to read a list of files which includes input files AND the files that are output from detect_circles_LOC.py
 
 
 # import the necessary packages
-
 import glob
 import pandas as pd
 import numpy as np
 
-## Get all the png image in the PATH_TO_IMAGES. Input whatever folder you're actually using.
-## including /saveTo**/ also searches one level of sub-directories below "input" that start with saveTo
-imgnames = sorted(glob.glob("output/*.jpg"))
+## Construct file list
+imgnames = sorted(glob.glob("input/*.jpg"))
 
 
-# add outputs and non-outputs to a dataframe of all results
+# set dataframe
 df = pd.DataFrame()
 
-# positive outputs
+# Add all files to dataframe
 df['file'] = pd.Series(imgnames).astype(str)
-df['circ'] = 0
+
+# Set "circles" variable to 0
+df['circles'] = 0
+
+# Set circles=1 if the filename is identified as an output from detect_circles_LOC.py
 df.loc[df['file'].str.contains("_out"), 'circ'] = 1
 
-# strip out unnecessary info
+# strip out unnecessary info from filename
 df['file'] = df['file'].str.split('/').str[-1]
 df['file'] = df['file'].str.rstrip('_out.jpg')
 df['file'] = df['file'].str.rstrip('.jpg')
 
-# delete the negative inputs to keep only positive outputs for those file
+# Delete the duplicate "input" listing for all "output" files
 df = df.sort_values(by=['circ'])
 df = df.drop_duplicates(subset='file', keep='last')
 df[['set','number']] = df.file.str.split("-", expand = True)
 
-# sort and output as csv
+# Sort by filename and save as csv
 df = df.sort_values(by=['file'])
 df.to_csv('output.csv', index=False)
 
-# now, look at dataframe to see if there are any folders with a lot of positives.
-# do so by getting the mean of "circ", grouped by "set"
-# This incidates they have a compass visible, and you need to run the compass script instead.
+
