@@ -1,10 +1,12 @@
 #### FOLDER STRUCTURE###
 # level 1: input folder, this script
 # input folder: includes subfolders downloaded from LOC database, using LOC API. Folder names begin with "saveTo".
-# place output folder within input folder
+# place output folder WITHIN input folder
 
-# ARE THERE COMPASSES ON THIS MAP? 0 for no, 1 for yes
+################## ARE THERE COMPASSES ON THE MAPS? 0 for no, 1 for yes #################
 compass = 0
+###################################################
+
 
 # import the necessary packages
 import numpy as np
@@ -13,11 +15,12 @@ import glob
 import os,sys
 import cv2
 
-# function to change output path
+# set function to change output path
 def change_to_output(path):
     return os.path.join(os.path.split(os.path.dirname(path))[0], 'output', os.path.basename(path))
 
-# parameters for circle bin radii, hough_circles, GaussianBlur, and circle drawn by cv2 are defined here
+################################## parameters ##################################
+# params for circle bin radii, hough_circles, GaussianBlur, and circle drawn by cv2 are defined here
 
 # params for circles_compass
 ## Radii
@@ -63,8 +66,12 @@ draw_stroke = 8
 text_size = 0.5
 text_stroke = 1
 
+################################## end of params ##################################
+
+
+# load filenames
 ## including /saveTo**/ also searches one level of sub-directories below "input" that start with saveTo
-imgnames = sorted(glob.glob("input/saveTo**/*.jpg"))
+imgnames = sorted(glob.glob("input/***/*.jpg"))
 
 # load the images, clone for output
 for imgname in imgnames:
@@ -108,7 +115,7 @@ for imgname in imgnames:
     gray_l = cv2.cvtColor(blur_l, cv2.COLOR_BGR2GRAY)
 
 
-# detect circles in the image
+################################### detect circles in the image, 3 iterations ##################################
 
 # Compass? iteration
     circles_c = cv2.HoughCircles(gray_c,cv2.HOUGH_GRADIENT,1,min_dist_c,
@@ -121,8 +128,9 @@ for imgname in imgnames:
             cv2.circle(output,(x, y), r, (0, 255, 0), draw_stroke)
             # draw the radius
             cv2.putText(output,str(r),(x,y), cv2.FONT_HERSHEY_SIMPLEX, text_size, (255,0,0), text_stroke, cv2.LINE_AA)
-            # draw the center of the circle
-        #    cv2.circle(output,(x, y), 2, (0, 0, 255), 3)
+
+        #   draw the center of the circle
+        #   cv2.circle(output,(x, y), 2, (0, 0, 255), 3)
 
 # Small iteration
     circles = cv2.HoughCircles(gray_s,cv2.HOUGH_GRADIENT,1,min_dist_s,
@@ -135,8 +143,9 @@ for imgname in imgnames:
             cv2.circle(output,(x, y), r, (0, 255, 0), draw_stroke)
             # draw the radius
             cv2.putText(output,str(r),(x,y), cv2.FONT_HERSHEY_SIMPLEX, text_size, (255,0,0), text_stroke, cv2.LINE_AA)
-            # draw the center of the circle
-        #    cv2.circle(output,(x, y), 2, (0, 0, 255), 3)
+
+        #   draw the center of the circle
+        #   cv2.circle(output,(x, y), 2, (0, 0, 255), 3)
 
 
 # Large iteration
@@ -150,9 +159,12 @@ for imgname in imgnames:
             cv2.circle(output,(x, y), r, (0, 255, 0), draw_stroke)
             # draw the radius
             cv2.putText(output,str(r),(x,y), cv2.FONT_HERSHEY_SIMPLEX, text_size, (255,0,0), text_stroke, cv2.LINE_AA)
-            # draw the center of the circle
-        #    cv2.circle(output,(x, y), 2, (0, 0, 255), 3)
 
+        #   draw the center of the circle
+        #   cv2.circle(output,(x, y), 2, (0, 0, 255), 3)
+
+
+##################################### set conditions and output files with circles ##################################
 
 # define bottom threshold for how many circles to find
     if circles_c is not None:
@@ -167,34 +179,14 @@ for imgname in imgnames:
         no_of_circles_1 = int(len(circles_1))
     else: no_of_circles_1 = int(0)
 
-# if there is a circle, print output
-    if (no_of_circles>0) or (no_of_circles_1>0) or (no_of_circles_c>compass):
+# number_circles it the total number of circles found, minus the number of compasses on the map
+    number_circles = no_of_circles + no_of_circles_1 + no_of_circles_c - compass
+
+# if there is a circle, save the file with "_out" and the number of circles appended to the filename
+    if number_circles > 0:
         imgname1 = "_out".join(os.path.splitext(imgname))
+        imgname1 = str(number_circles).join(os.path.splitext(imgname1))
         imgname1 = change_to_output(imgname1)
         cv2.imwrite(imgname1, output)
     else:
         imgname2 = imgname
-
-# add outputs and non-outputs to a dataframe of all results
-df1 = pd.DataFrame()
-df2 = pd.DataFrame()
-
-# positive outputs
-df1['files'] = pd.Series(imgname1).astype(str)
-# df1['files'] = df1['files'].map(lambda x: rstrip('_out.jpg'))
-df1['circ'] = 1
-
-# negative outputs
-df2['files'] = pd.Series(imgname2).astype(str)
-# df2['files'] = df2['files'].map(lambda x: rstrip('.jpg'))
-df2['circ'] = 0
-
-# combine pos and neg df and strip out unnecessary info
-df = df1.append(df2)
-df['files'] = df['files'].str.split('/').str[-1]
-df['files'] = df['files'].str.rstrip('_out.jpg')
-df['files'] = df['files'].str.rstrip('.jpg')
-
-# sort and output as csv
-df = df.sort_values(by=['files'])
-df.to_csv('output.csv', index=False)

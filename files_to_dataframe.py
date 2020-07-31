@@ -9,7 +9,7 @@ import pandas as pd
 import numpy as np
 
 ## Construct file list
-imgnames = sorted(glob.glob("input/*.jpg"))
+imgnames = sorted(glob.glob("input/***/*.jpg"))
 
 
 # set dataframe
@@ -21,21 +21,27 @@ df['file'] = pd.Series(imgnames).astype(str)
 # Set "circles" variable to 0
 df['circles'] = 0
 
-# Set circles=1 if the filename is identified as an output from detect_circles_LOC.py
-df.loc[df['file'].str.contains("_out"), 'circ'] = 1
+# Set number of circles according to output filename from detect_circles_LOC.py
+
+df['circles']= df['file'].str.extract(r'((?<=_out)\w+(?=\.jpg))')
 
 # strip out unnecessary info from filename
 df['file'] = df['file'].str.split('/').str[-1]
+df['file'] = df['file'].str.split('_out').str[0]
 df['file'] = df['file'].str.rstrip('_out.jpg')
 df['file'] = df['file'].str.rstrip('.jpg')
 
 # Delete the duplicate "input" listing for all "output" files
-df = df.sort_values(by=['circ'])
-df = df.drop_duplicates(subset='file', keep='last')
-df[['set','number']] = df.file.str.split("-", expand = True)
+df = df.sort_values(by=['circles'])
+df = df.drop_duplicates(subset='file', keep='first')
+
+# Split filename into constitutive components
+df[['set','page']] = df.file.str.split("-", expand = True)
+df['city'] = df['set'].str[:5]
+df['year'] = df['set'].str[-4:]
+df['volume'] = df['set'].str.extract(r'((?<=_)\w+(?=_))')
 
 # Sort by filename and save as csv
 df = df.sort_values(by=['file'])
+# dfout = df[['city', 'volume', 'year', 'page', 'circles']]
 df.to_csv('output.csv', index=False)
-
-

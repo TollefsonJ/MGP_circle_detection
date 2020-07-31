@@ -6,13 +6,12 @@ import pprint
 import re
 
 
-# construct search URL using website
-# enable number three at bottom of page to download
-# this script removes sleep function.... hope that's cool (commented in line 156)
 
-searchURL = 'https://www.loc.gov/collections/sanborn-maps/?dates=1890/1899&fa=location:new+york%7Clocation:queens'
+##### SET SEARCH URL, FILETYPE, AND SAVE LOCATION #####
+
+searchURL = 'https://www.loc.gov/collections/sanborn-maps/?fa=location:rhode+island'
 fileExtension = 'jpg'
-saveTo = 'saveTo/'
+saveTo = 'input/'
 
 
 
@@ -164,9 +163,9 @@ ids = get_item_ids(searchURL, items=[])
 # 2. get_image_urls
 image_urls_list = get_image_urls(ids, fileExtension, items=[])
 
-print('\nList of files to be downloaded:')
-for url in image_urls_list:
- print(url['image_url'])
+ print('\nList of files to be downloaded:')
+ for url in image_urls_list:
+     print(url['image_url'])
 
 # 3. get_image_files
 get_image_files(image_urls_list,saveTo)
