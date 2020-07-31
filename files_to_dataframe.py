@@ -1,9 +1,5 @@
-# this script reads in a list of
-
-#### FOLDER STRUCTURE###
-# level 1: input folder, this script
-# input folder: a collection of folders with images (images must be in folders starting with "saveTo"; no sub-folders)
-# place output folder within input folder
+# this script reads in a list of files from output folder and converts to a dataframe
+# uses filenames generated from circle detection script
 
 
 # import the necessary packages
@@ -14,7 +10,7 @@ import numpy as np
 
 ## Get all the png image in the PATH_TO_IMAGES. Input whatever folder you're actually using.
 ## including /saveTo**/ also searches one level of sub-directories below "input" that start with saveTo
-imgnames = sorted(glob.glob("input/***/*.jpg"))
+imgnames = sorted(glob.glob("output/*.jpg"))
 
 
 # add outputs and non-outputs to a dataframe of all results
