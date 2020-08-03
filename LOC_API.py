@@ -1,3 +1,5 @@
+# Source: https://github.com/LibraryOfCongress/data-exploration/blob/master/maps/maps-downloading-querying.ipynb
+
 import requests
 import time
 import pandas as pd
