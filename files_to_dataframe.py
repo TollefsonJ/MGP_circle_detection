@@ -9,7 +9,7 @@ import pandas as pd
 import numpy as np
 
 ## Construct file list
-imgnames = sorted(glob.glob("input/***/*.jpg"))
+imgnames = sorted(glob.glob("***/*.jpg"))
 
 
 # set dataframe
