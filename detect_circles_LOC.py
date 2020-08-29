@@ -86,16 +86,18 @@ text_stroke = 1
 ## including /saveTo**/ also searches one level of sub-directories below "input" that start with saveTo
 imgnames = sorted(glob.glob("input/***/*.jpg"))
 
+# exclude files that include 'ind', 'titl', or 'covr' in filenames
+imgnames = [ x for x in imgnames if "ind" not in x and "titl" not in x and 'covr' not in x]
+
 # load the images, clone for output
 for imgname in imgnames:
     image = cv2.imread(imgname)
-    copy = image.copy()
 
 
 
 ######## resize to fit params ###################################################
 
-    height, width = copy.shape[:2]
+    height, width = image.shape[:2]
     target_height = 2008
     target_width = 1390
 

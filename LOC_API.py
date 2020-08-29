@@ -11,7 +11,7 @@ import re
 
 ##### SET SEARCH URL, FILETYPE, AND SAVE LOCATION #####
 
-searchURL = 'https://www.loc.gov/collections/sanborn-maps/?fa=location:rhode+island'
+searchURL = 'https://www.loc.gov/collections/sanborn-maps/?dates=1910/1999&fa=location:new+york|location:brooklyn'
 fileExtension = 'jpg'
 saveTo = 'input/'
 
@@ -165,9 +165,9 @@ ids = get_item_ids(searchURL, items=[])
 # 2. get_image_urls
 image_urls_list = get_image_urls(ids, fileExtension, items=[])
 
- print('\nList of files to be downloaded:')
- for url in image_urls_list:
-     print(url['image_url'])
+print('\nList of files to be downloaded:')
+for url in image_urls_list:
+ print(url['image_url'])
 
 # 3. get_image_files
 get_image_files(image_urls_list,saveTo)
