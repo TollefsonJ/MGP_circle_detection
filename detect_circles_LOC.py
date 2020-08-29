@@ -226,3 +226,41 @@ for imgname in imgnames:
         cv2.imwrite(imgname1, output)
     else:
         imgname2 = imgname
+
+
+# output circle regions of interest (ROI) to ROI folder for ML analysis
+for (x, y, r) in circles_c:
+    ROI = copy[y-r-box:y+r+box, x-r-box:x+r+box]
+    circ_roi = "-".join(os.path.splitext(imgname))
+    circ_roi = str(x).join(os.path.splitext(circ_roi))
+    circ_roi = ",".join(os.path.splitext(circ_roi))
+    circ_roi = str(y).join(os.path.splitext(circ_roi))
+    circ_roi = change_to_ROI(circ_roi)
+    cv2.imwrite(circ_roi, ROI)
+
+for (x, y, r) in circles_s:
+    ROI = copy[y-r-box:y+r+box, x-r-box:x+r+box]
+    circ_roi = "-".join(os.path.splitext(imgname))
+    circ_roi = str(x).join(os.path.splitext(circ_roi))
+    circ_roi = ",".join(os.path.splitext(circ_roi))
+    circ_roi = str(y).join(os.path.splitext(circ_roi))
+    circ_roi = change_to_ROI(circ_roi)
+    cv2.imwrite(circ_roi, ROI)
+
+for (x, y, r) in circles_l:
+    ROI = copy[y-r-box:y+r+box, x-r-box:x+r+box]
+    circ_roi = "-".join(os.path.splitext(imgname))
+    circ_roi = str(x).join(os.path.splitext(circ_roi))
+    circ_roi = ",".join(os.path.splitext(circ_roi))
+    circ_roi = str(y).join(os.path.splitext(circ_roi))
+    circ_roi = change_to_ROI(circ_roi)
+    cv2.imwrite(circ_roi, ROI)
+
+for (x, y, r) in circles_xl:
+    ROI = copy[y-r-box:y+r+box, x-r-box:x+r+box]
+    circ_roi = "-".join(os.path.splitext(imgname))
+    circ_roi = str(x).join(os.path.splitext(circ_roi))
+    circ_roi = ",".join(os.path.splitext(circ_roi))
+    circ_roi = str(y).join(os.path.splitext(circ_roi))
+    circ_roi = change_to_ROI(circ_roi)
+    cv2.imwrite(circ_roi, ROI)

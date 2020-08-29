@@ -11,7 +11,7 @@ import re
 
 ##### SET SEARCH URL, FILETYPE, AND SAVE LOCATION #####
 
-searchURL = 'https://www.loc.gov/collections/sanborn-maps/?dates=1910/1999&fa=location:new+york|location:brooklyn'
+searchURL = 'https://www.loc.gov/collections/sanborn-maps/?dates=1936/1999&fa=location:new+orleans'
 fileExtension = 'jpg'
 saveTo = 'input/'
 

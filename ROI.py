@@ -39,7 +39,7 @@ min_dist = 20
 min_dist_2 = 60
 # params
 p1 = 20
-p2 = 75
+p2 = 85
 # blur
 b1 = 3
 b2 = 3
@@ -50,7 +50,7 @@ text_size = 0.5
 text_stroke = 1
 
 # how much to increase bounding box around circle ROI
-box = 15
+mult = 1.2
 ########################################
 
 
@@ -58,7 +58,7 @@ box = 15
 imgnames = sorted(glob.glob("input/***/*.jpg"))
 
 # exclude files that include 'ind', 'titl', or 'covr' in filenames
-imgnames = [ x for x in imgnames if "ind" not in x and "titl" not in x and 'covr' not in x and '0000' not in x]
+imgnames = [ x for x in imgnames if "ind" not in x and "titl" not in x and 'covr' not in x and 'cbd' not in x and '0000' not in x]
 
 # load the images, clone for output
 for imgname in imgnames:
@@ -113,14 +113,17 @@ for imgname in imgnames:
     if circles is not None:
         circles = np.round(circles[0, :]).astype("int")
         for (x, y, r) in circles:
-            ROI = copy[y-r-box:y+r+box, x-r-box:x+r+box]
+            box = int(mult*r)
+            ROI = copy[y-box:y+box, x-box:x+box]
             circ_roi = "-".join(os.path.splitext(imgname))
             circ_roi = str(x).join(os.path.splitext(circ_roi))
             circ_roi = ",".join(os.path.splitext(circ_roi))
             circ_roi = str(y).join(os.path.splitext(circ_roi))
             circ_roi = change_to_ROI(circ_roi)
-            cv2.imwrite(circ_roi, ROI)
-
+            try:
+                cv2.imwrite(circ_roi, ROI)
+            except:
+                continue
             cv2.circle(output,(x, y), r, (0, 255, 0), draw_stroke)
             # draw the radius
             cv2.putText(output,str(x)+','+str(y),(x,y), cv2.FONT_HERSHEY_SIMPLEX, text_size, (255,0,0), text_stroke, cv2.LINE_AA)
@@ -131,14 +134,17 @@ for imgname in imgnames:
     if circles2 is not None:
         circles2 = np.round(circles2[0, :]).astype("int")
         for (x, y, r) in circles2:
-            ROI = copy[y-r-box:y+r+box, x-r-box:x+r+box]
+            box = int(mult*r)
+            ROI = copy[y-box:y+box, x-box:x+box]
             circ_roi = "-".join(os.path.splitext(imgname))
             circ_roi = str(x).join(os.path.splitext(circ_roi))
             circ_roi = ",".join(os.path.splitext(circ_roi))
             circ_roi = str(y).join(os.path.splitext(circ_roi))
             circ_roi = change_to_ROI(circ_roi)
-            cv2.imwrite(circ_roi, ROI)
-
+            try:
+                cv2.imwrite(circ_roi, ROI)
+            except:
+                continue
             cv2.circle(output,(x, y), r, (0, 255, 0), draw_stroke)
             # draw the radius
             cv2.putText(output,str(x)+','+str(y),(x,y), cv2.FONT_HERSHEY_SIMPLEX, text_size, (255,0,0), text_stroke, cv2.LINE_AA)

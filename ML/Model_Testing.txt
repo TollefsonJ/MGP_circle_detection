@@ -1,0 +1,24 @@
+MODEL 1
+
+clf = MLPClassifier(solver='lbfgs', alpha=1e-5,
+                    hidden_layer_sizes=(5, 2), random_state=1)
+
+
+
+
+
+TRAIN 1: "no" includes non-circles, curved roads, turntables, and some empty circles and other circles with non-FMGP writing
+Accuracy score: 61%
+
+
+TRAIN 2: "no" includes only non-circles, curved roads, and turntables
+Accuracy score: 69.7%
+Thus far: seems to be mostly false positives. Turntables?
+
+
+TRAIN 3: "no" includes turntables and labels. "Yes" includes MGPs.
+Accuracy: 72.5%
+False pos: 3
+False neg: 11
+
+Thought: use Detect Circles to only detect circles (not buildings, etc). Use ML model to distinguish between industrial circles and train turntables/labels. 
