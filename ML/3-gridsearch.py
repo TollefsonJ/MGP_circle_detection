@@ -68,9 +68,8 @@ parameter_space = {
     'hidden_layer_sizes': [(5,2), (100,)],
     'activation': ['relu'],
     'solver': ['lbfgs'],
-    'alpha': [1e-5],
-    'learning_rate': ['constant','adaptive'],
-    'random_state':['1']
+    'alpha': [(1e-5), (0.0001)],
+    'learning_rate': ['constant','adaptive']
 }
 
 # set up to find optimal model parameters
@@ -110,6 +109,7 @@ diff = np.subtract(y_pred, y_true)
 false_pos = np.count_nonzero(diff == 1)
 false_neg = np.count_nonzero(diff == -1)
 
+print(str("Total positives identified: ") + str(len(y_pred)))
 print(str("False positives: ") + str(false_pos))
 print(str("False negatives: ") + str(false_neg))
 

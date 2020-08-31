@@ -22,3 +22,24 @@ False pos: 3
 False neg: 11
 
 Thought: use Detect Circles to only detect circles (not buildings, etc). Use ML model to distinguish between industrial circles and train turntables/labels. 
+
+
+TRAIN 4: "no" includes turntables, "other circles", and non-circle buildings. "Yes" increased to 245 items.
+Accuracy: 83%
+False pos: 9
+False neg: 14
+Total pos: 138
+Basically: detect_circles reduces coding by 90% (page-wise). ML model further reduces coding from 490 to 138, or a 70% reduction (circle-wise). 
+You lose 9 "true" positives, or 6%. However, running multiple years (say, 4 years) mean that the probability of entirely missing an entire MGP site is 0.06^4.
+
+For small cities that may only have one map pub: unlikely for there to be substantial non-production infrastructure; production infrastructure would be listed under Sanborn indexes, which could be trolled and digitized and searched.
+
+
+
+
+TRAIN 5: "no" includes non-MGPs industrial; turntables; "other circles" and non-circle buildings.
+Accuracy: 81.4%
+Total pos: 162
+Fas pos: 16
+False neg: 14
+1 - (False neg / total pos) = 92%
