@@ -35,4 +35,5 @@ dest1 = 'training_images/FINAL/'
 files = os.listdir(source)
 
 for f in files:
-    shutil.move(source+f, dest1)
+    if "jpg" in f:
+        shutil.move(source+f, dest1)

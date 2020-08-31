@@ -39,10 +39,9 @@ X = X.reshape((nsamples, nx*ny))
 ###########################################################################
 
 
-from sklearn.datasets import make_blobs
+
 from sklearn.model_selection import train_test_split
 from sklearn import preprocessing
-from sklearn.linear_model import LogisticRegression
 
 # split data into train and test sets
 
@@ -108,8 +107,11 @@ print(str("Accuracy = ") + str(score))
 diff = np.subtract(y_pred, y_true)
 false_pos = np.count_nonzero(diff == 1)
 false_neg = np.count_nonzero(diff == -1)
+total_pos = np.count_nonzero(y_pred == 1)
+total_neg = np.count_nonzero(y_pred == 0)
 
-print(str("Total positives identified: ") + str(len(y_pred)))
+print(str("Total positives identified: ") + str(total_pos))
+print(str("Total negatives identified: ") + str(total_neg))
 print(str("False positives: ") + str(false_pos))
 print(str("False negatives: ") + str(false_neg))
 
@@ -120,10 +122,10 @@ print(str("False negatives: ") + str(false_neg))
 # print(classification_report(y_true, y_pred))
 
 
-# ###### save it #######
-# from pickle import dump
-# # save the model
-# dump(clf, open('model.pkl', 'wb'))
-#
-# # save the scaler
-# dump(scaler, open('scaler.pkl', 'wb'))
+###### save it #######
+from pickle import dump
+# save the model
+dump(clf, open('model.pkl', 'wb'))
+
+# save the scaler
+dump(scaler, open('scaler.pkl', 'wb'))
