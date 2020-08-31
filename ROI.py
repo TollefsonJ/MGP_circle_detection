@@ -4,10 +4,6 @@
 # level 1: input folder, output folder, this script
 # input folder: includes subfolders downloaded from LOC database, using LOC API. Folder names begin with "saveTo".
 
-################## ARE THERE COMPASSES ON THE MAPS? 0 for no, 1 for yes #################
-compass = 0
-###################################################
-
 
 # import the necessary packages
 import numpy as np
