@@ -24,7 +24,7 @@ def find_circles(rmin, rmax, min_dist, p2):
         circles = np.round(circles[0, :]).astype("int")
         for (x, y, r) in circles:
             box = int(mult*r)
-            ROI = copy[y-box:y+box, x-box:x+box]
+            ROI = image[y-box:y+box, x-box:x+box]
             circ_roi = "-".join(os.path.splitext(imgname))
             circ_roi = str(x).join(os.path.splitext(circ_roi))
             circ_roi = ",".join(os.path.splitext(circ_roi))

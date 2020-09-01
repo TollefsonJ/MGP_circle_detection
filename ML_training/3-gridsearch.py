@@ -62,9 +62,9 @@ X_train_scaled = scaler.transform(X_train)
 from sklearn.neural_network import MLPClassifier
 
 # define paramets to search
-mlp = MLPClassifier(max_iter=300)
+mlp = MLPClassifier(max_iter=500)
 parameter_space = {
-    'hidden_layer_sizes': [(5,2), (100,)],
+    'hidden_layer_sizes': [(100,50), (100,)],
     'activation': ['relu'],
     'solver': ['lbfgs'],
     'alpha': [(1e-5), (0.0001)],
