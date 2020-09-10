@@ -38,33 +38,33 @@ X = X.reshape((nsamples, nx*ny))
 ###########################################################################
 ###########################################################################
 
-# resample, so that y=1 is oversampled
-from imblearn.over_sampling import RandomOverSampler
-ros = RandomOverSampler(random_state=0)
-X_resampled, y_resampled = ros.fit_resample(X, y)
-from collections import Counter
-print("Training data resampled")
-print("Y counts: ")
-print(sorted(Counter(y_resampled).items()))
-
-
 
 from sklearn.model_selection import train_test_split
 from sklearn import preprocessing
 
 # split data into train and test sets
 
-X_train, X_test, y_train, Y_test = train_test_split(X_resampled, y_resampled, test_size=0.20, random_state=1)
+X_train, X_test, y_train, Y_test = train_test_split(X, y, test_size=0.20, random_state=1)
+
+# resample, so that y=1 is oversampled
+from imblearn.over_sampling import RandomOverSampler
+ros = RandomOverSampler(random_state=0)
+X_train_res, y_train_res = ros.fit_resample(X, y)
+from collections import Counter
+print("Training data resampled")
+print("Y counts: ")
+print(sorted(Counter(y_train_res).items()))
+
 
 
 # define scaler
-scaler = preprocessing.StandardScaler().fit(X_train)
+scaler = preprocessing.StandardScaler().fit(X_train_res)
 
 # or: use minmax scaler
 # scaler = preprocessing.MinMaxScaler()
 
 # transform the training dataset
-X_train_scaled = scaler.transform(X_train)
+X_train_res_scaled = scaler.transform(X_train_res)
 
 
 # define model
@@ -88,7 +88,7 @@ from sklearn.model_selection import GridSearchCV
 clf = GridSearchCV(mlp, parameter_space, n_jobs=-1, cv=3)
 
 # run it to find optimal parameters
-clf.fit(X_train_scaled, y_train)
+clf.fit(X_train_res_scaled, y_train_res)
 
 # Best parameter set
 print('Best parameters found:\n', clf.best_params_)
