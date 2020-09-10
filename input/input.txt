@@ -1,0 +1,1 @@
+Place folders with Sanborn map pages for analysis here.
