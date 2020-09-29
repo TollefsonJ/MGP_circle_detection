@@ -1,3 +1,10 @@
+
+################## ML predict_proba cutoff parameter ############
+# "cutoff" sets the minimum ML probability prediction
+# for circles to be returned as positives
+cutoff = 0.3
+
+
 # import images into X and Y arrays
 
 from PIL import Image
@@ -47,10 +54,11 @@ from sklearn import preprocessing
 X_train, X_test, y_train, Y_test = train_test_split(X, y, test_size=0.2, random_state=0)
 
 from collections import Counter
-print("Y counts: ")
+print("Y train array: ")
 print(sorted(Counter(y_train).items()))
 
-
+print("Y test array: ")
+print(sorted(Counter(y_test).items()))
 
 
 ####################################
@@ -79,7 +87,7 @@ pipe.fit(X_train, y_train)
 # set threshold for positive output in the predict_proba line
 from sklearn.metrics import recall_score, accuracy_score, precision_score
 
-y_true, y_pred = Y_test, (pipe.predict_proba(X_test)[:,1] >= 0.3).astype(bool)
+y_true, y_pred = Y_test, (pipe.predict_proba(X_test)[:,1] >= cutoff).astype(bool)
 
 
 # print accuracy
@@ -93,7 +101,7 @@ print(str("Accuracy score: ") + str(accuracy))
 
 # get false pos and false neg
 diff = np.subtract(y_pred, y_true)
-false_pos = np.count_noxnzero(diff == 1)
+false_pos = np.count_nonzero(diff == 1)
 false_neg = np.count_nonzero(diff == -1)
 total_pos = np.count_nonzero(y_pred == 1)
 total_neg = np.count_nonzero(y_pred == 0)

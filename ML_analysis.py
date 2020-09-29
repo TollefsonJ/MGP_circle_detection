@@ -23,32 +23,9 @@ cx = []
 cy = []
 cr = []
 
-
-#################### define functions ##############
-
-
-# define circles function
-def find_circles(rmin, rmax, min_dist, p2):
-    circles = cv2.HoughCircles(blur,cv2.HOUGH_GRADIENT,1,min_dist,
-                                param1=p1,param2=p2,minRadius=rmin,maxRadius=rmax)
-    if circles is not None:
-        circles = np.round(circles[0, :]).astype("int")
-        for (x, y, r) in circles:
-            try:
-                box = int(mult*r)
-                box = int(mult*r)
-                ROI = gray[y-box:y+box, x-box:x+box]
-                ROI = cv2.resize(ROI, (64,64))
-                all_circles_as_array.append(ROI)
-                filename.append(imgname)
-                cx.append(x)
-                cy.append(y)
-                cr.append(r)
-            except:
-                continue
-
-
 ################################## parameters ##################################
+
+################ hough.circles parameters ############
 # global circles params
 p1 = 20
 # blur
@@ -75,6 +52,34 @@ min3 = 71
 max3 = 130
 dist3 = 70
 p2_3 = 75
+
+################## ML predict_proba cutoff parameter ############
+# "cutoff" sets the minimum ML probability prediction
+# for circles to be returned as positives
+
+cutoff = 0.5
+
+#################### define hough.circles function ##############
+
+def find_circles(rmin, rmax, min_dist, p2):
+    circles = cv2.HoughCircles(blur,cv2.HOUGH_GRADIENT,1,min_dist,
+                                param1=p1,param2=p2,minRadius=rmin,maxRadius=rmax)
+    if circles is not None:
+        circles = np.round(circles[0, :]).astype("int")
+        for (x, y, r) in circles:
+            try:
+                box = int(mult*r)
+                box = int(mult*r)
+                ROI = gray[y-box:y+box, x-box:x+box]
+                ROI = cv2.resize(ROI, (64,64))
+                all_circles_as_array.append(ROI)
+                filename.append(imgname)
+                cx.append(x)
+                cy.append(y)
+                cr.append(r)
+            except:
+                continue
+
 
 ###############################################################################
 #########################  find circles!!!!!!!!  ##############################
@@ -109,18 +114,17 @@ print(":::::Array reshaped for analysis:::::")
 print(("X array reshaped: ") + str(X.shape))
 
 ###############################################################################
-######################## scale and run through ML model #######################
+######################## pass circles through ML pipeline #######################
 ###############################################################################
 
 import pickle
 
-# define scaler and apply
+# select model (mlp vs rf) and apply
 
-scaler = pickle.load(open('ML_training/scaler.pkl', 'rb'))
-X_scaled = scaler.transform(X)
+pipe = pickle.load(open('ML_training/mlp.pkl', 'rb'))
+# pipe = pickle.load(open('ML_training/rf.pkl', 'rb'))
 
-model = pickle.load(open('ML_training/model.pkl', 'rb'))
-y_pred = model.predict_proba(X_scaled)
+y_pred = pipe.predict_proba(X)
 
 ########################################################################
 ######################## output results to csv #########################
@@ -144,9 +148,6 @@ print(df)
 ########################################################################
 ################ copy positives to new folder for coding ################
 ########################################################################
-
-##### set cutoff for what the predict_proba cutoff for a "positive" should be ##### 
-cutoff = 0.1
 
 from PIL import Image, ImageOps
 dfpos = df.loc[df['p(pos)'] > cutoff]

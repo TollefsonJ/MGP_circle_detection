@@ -1,3 +1,8 @@
+################## ML predict_proba cutoff parameter ############
+# "cutoff" sets the minimum ML probability prediction
+# for circles to be returned as positives
+cutoff = 0.5
+
 # import images into X and Y arrays
 
 from PIL import Image
@@ -44,12 +49,15 @@ from sklearn import preprocessing
 
 ####### split data into train and test sets
 
-X_train, X_test, y_train, Y_test = train_test_split(X, y, test_size=0.2, random_state=0)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1)
 
 
 from collections import Counter
-print("Train Y array: ")
+print("Y train array: ")
 print(sorted(Counter(y_train).items()))
+
+print("Y test array: ")
+print(sorted(Counter(y_test).items()))
 
 
 ####################################
@@ -82,7 +90,7 @@ pipe.fit(X_train, y_train)
 
 from sklearn.metrics import recall_score, accuracy_score, precision_score
 
-y_true, y_pred = Y_test, (pipe.predict_proba(X_test)[:,1] >= 0.5).astype(bool)
+y_true, y_pred = y_test, (pipe.predict_proba(X_test)[:,1] >= cutoff).astype(bool)
 
 
 ############### print accuracy
@@ -101,7 +109,6 @@ false_neg = np.count_nonzero(diff == -1)
 total_pos = np.count_nonzero(y_pred == 1)
 total_neg = np.count_nonzero(y_pred == 0)
 
-print(str("Test Y array:") + (sorted(Counter(y_train).items())))
 print(str("Total positives identified: ") + str(total_pos))
 print(str("Total negatives identified: ") + str(total_neg))
 print(str("False positives: ") + str(false_pos))

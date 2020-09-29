@@ -1,1 +1,3 @@
 Place folders with Sanborn map pages for analysis here.
+
+See example input and outputs, or run ML_analysis to produce the outputs yourself.

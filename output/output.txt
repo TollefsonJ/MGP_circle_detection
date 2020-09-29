@@ -1,1 +1,3 @@
 Map pages with circles that the ML model identifies as MGPs are copied here.
+
+See output examples in folder, or run ML_analysis to produce the outputs yourself.
