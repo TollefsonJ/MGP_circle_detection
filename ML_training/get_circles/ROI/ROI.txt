@@ -1,0 +1,1 @@
+Circular regions are output to this folder for manual coding.
