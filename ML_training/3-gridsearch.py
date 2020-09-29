@@ -58,9 +58,6 @@ print(sorted(Counter(y_train).items()))
 
 
 
-
-
-
 ####################################
 ###### scale and classify! ######
 ####################################
@@ -109,7 +106,6 @@ for mean, std, params in zip(means, stds, grid.cvults_['params']):
 from sklearn.metrics import recall_score, accuracy_score, precision_score
 
 y_true, y_pred = Y_test, (pipe.predict_proba(X_test)[:,1] >= cutoff).astype(bool)
-# y_true, y_pred = Y_test, pipe.predict(X_test_scaled)
 
 
 # print accuracy
