@@ -145,9 +145,11 @@ print(df)
 ################ copy positives to new folder for coding ################
 ########################################################################
 
+##### set cutoff for what the predict_proba cutoff for a "positive" should be ##### 
+cutoff = 0.1
 
 from PIL import Image, ImageOps
-dfpos = df.loc[df['p(pos)'] > 0.1]
+dfpos = df.loc[df['p(pos)'] > cutoff]
 positives = dfpos['file'].tolist()
 def change_to_output(path):
     return os.path.join(os.path.split(os.path.dirname(os.path.dirname(path)))[0], 'output', os.path.basename(path))
