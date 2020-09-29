@@ -138,8 +138,6 @@ dfcy = pd.DataFrame(cy)
 dfcr = pd.DataFrame(cr)
 df = pd.concat([dffile, dfy_pred, dfcx, dfcy, dfcr], axis=1)
 df.columns = ['file', 'p(neg)', 'p(pos)', 'x', 'y', 'r']
-path = "input/"                                       # strip path out of filename for csv output
-# df['file'] = df['file'].str.split(path).str[-1]       # strip path out of filename for csv output
 
 # output csv with predictions
 df.to_csv (r'output.csv', index = False)

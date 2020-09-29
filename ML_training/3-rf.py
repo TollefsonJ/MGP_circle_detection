@@ -51,7 +51,7 @@ from sklearn import preprocessing
 
 # split data into train and test sets
 
-X_train, X_test, y_train, Y_test = train_test_split(X, y, test_size=0.2, random_state=0)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
 
 from collections import Counter
 print("Y train array: ")
@@ -87,7 +87,7 @@ pipe.fit(X_train, y_train)
 # set threshold for positive output in the predict_proba line
 from sklearn.metrics import recall_score, accuracy_score, precision_score
 
-y_true, y_pred = Y_test, (pipe.predict_proba(X_test)[:,1] >= cutoff).astype(bool)
+y_true, y_pred = y_test, (pipe.predict_proba(X_test)[:,1] >= cutoff).astype(bool)
 
 
 # print accuracy
