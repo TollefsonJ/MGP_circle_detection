@@ -1,3 +1,9 @@
+################## ML predict_proba cutoff parameter ############
+# "cutoff" sets the minimum ML probability prediction
+# for circles to be returned as positives
+cutoff = 0.5
+
+
 # import images into X and Y arrays
 
 from PIL import Image
@@ -102,7 +108,7 @@ for mean, std, params in zip(means, stds, grid.cvults_['params']):
 
 from sklearn.metrics import recall_score, accuracy_score, precision_score
 
-y_true, y_pred = Y_test, (pipe.predict_proba(X_test)[:,1] >= 0.05).astype(bool)
+y_true, y_pred = Y_test, (pipe.predict_proba(X_test)[:,1] >= cutoff).astype(bool)
 # y_true, y_pred = Y_test, pipe.predict(X_test_scaled)
 
 
