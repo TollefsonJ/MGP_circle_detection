@@ -70,18 +70,18 @@ scaler = preprocessing.StandardScaler().fit(X_train)
 
 
 ######### define model and parameters (mlpclassifier) - use gridsearch
-mlp = MLPClassifier(max_iter=500)
+mlp = MLPClassifier(max_iter=1000)
 mlp_parameter_space = {
-    'hidden_layer_sizes': [(100,50), (100,)],
+    'hidden_layer_sizes': [(100,50), (100,), (3,3,3)],
     'activation': ['relu'],
     'solver': ['lbfgs'],
-    'alpha': [(1e-5), (0.0001)],
+    'alpha': [(1e-5), (0.0001), (.01), (.1), (.5)],
     'learning_rate': ['constant','adaptive'],
     'random_state' : [0]
 }
 
 from sklearn.model_selection import GridSearchCV
-grid = GridSearchCV(mlp, mlp_parameter_space, n_jobs=-1)
+grid = GridSearchCV(mlp, mlp_parameter_space, scoring="f1", n_jobs=-1)
 
 
 pipe = Pipeline(steps =[('scaler',scaler) , ('search', grid)])
@@ -94,26 +94,28 @@ pipe.fit(X_train, y_train)
 print('Best parameters found:\n', grid.best_params_)
 
 ########## All gridsearch results
-means = grid.cvults_['mean_test_score']
-stds = grid.cvults_['std_test_score']
-for mean, std, params in zip(means, stds, grid.cvults_['params']):
-    print("%0.3f (+/-%0.03f) for %r" % (mean, std * 2, params))
+# means = grid.cv_results_['mean_test_score']
+# stds = grid.cv_results_['std_test_score']
+# for mean, std, params in zip(means, stds, grid.cv_results_['params']):
+#     print("%0.3f (+/-%0.03f) for %r" % (mean, std * 2, params))
 
 
 # test model
 # set threshold for positive output in the predict_proba line
 
-from sklearn.metrics import recall_score, accuracy_score, precision_score
+from sklearn.metrics import f1_score, recall_score, accuracy_score, precision_score
 
-y_true, y_pred = Y_test, (pipe.predict_proba(X_test)[:,1] >= cutoff).astype(bool)
-
+# y_true, y_pred = Y_test, (pipe.predict_proba(X_test)[:,1] >= cutoff).astype(bool)
+y_true, y_pred = Y_test, pipe.predict(X_test)
 
 # print accuracy
+f1 = f1_score(y_true, y_pred)
 recall = recall_score(y_true, y_pred)
 precision = precision_score(y_true, y_pred)
 accuracy = accuracy_score(y_true, y_pred)
 
-print(str("Recall score (tp / [tp+fn]) = ") + str(recall))
+print(str("F1 score: ") + str(f1))
+print(str("Recall score: ") + str(recall))
 print(str("Precision score: ") + str(precision))
 print(str("Accuracy score: ") + str(accuracy))
 
