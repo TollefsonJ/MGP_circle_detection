@@ -48,21 +48,27 @@ mult = 1.2
 
 # define pass 1
 min1 = 15
-max1 = 80
+max1 = 40
 dist1 = 20
-p2_1 = 70
+p2_1 = 65
 
 # define pass 2
-min2 = 81
-max2 = 150
-dist2 = 60
+min2 = 41
+max2 = 70
+dist2 = 40
 p2_2 = 70
+
+# define pass 3
+min3 = 71
+max3 = 130
+dist3 = 70
+p2_3 = 75
 
 ###############################################################################
 #########################  find circles!!!!!!!!  ##############################
 ###############################################################################
 # load filenames
-imgnames = sorted(glob.glob("analysis_images/input/*.jpg"))
+imgnames = sorted(glob.glob("input/***/*.jpg"))
 
 # exclude files that include 'ind', 'titl', or 'covr' in filenames
 imgnames = [ x for x in imgnames if "ind" not in x and "titl" not in x and 'covr' not in x and 'cbd' not in x and '0000' not in x]
@@ -72,6 +78,8 @@ for imgname in imgnames:
     image = cv2.imread(imgname)
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     blur = cv2.GaussianBlur(gray,(b1,b2),0)
+
 # find the circles!
     find_circles(min1, max1, dist1, p2_1)
     find_circles(min2, max2, dist2, p2_2)
+    find_circles(min3, max3, dist3, p2_3)
